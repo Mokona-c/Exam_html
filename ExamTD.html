@@ -1,3 +1,4 @@
+<!doctype html> 
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -237,22 +238,26 @@
         
         /*Inséré une couche et mette un style :*/
         
-//        function getColor(d) {
-//                return d > 
-//                }
+        function getColor(d) {
+                return d > 2000 ? '#800026' :
+                       d > 1000 ? '#E31A1C' :
+                        d > 500 ? '#FD8D3C' :
+                        d > 100  ? '#FD8D3C' :
+                                    '#FFEDA0';
+                }
             
-            function style1(feature) {
+            function style(feature) {
                 return {
+                   fillColor:getColor(feature.properties.PIB_hab2021),
                     weight: 0.5,
                     opacity: 0.5,
                     color: 'white',
                     dashArray: '3',
                     fillOpacity: 0.8,
-                    fillColor:getColor(feature.properties.NOMREGION),
                     };
                 } 
             
-            var geojson = L.geoJson(reg_PIB).addTo(mymap);
+            var geojson = L.geoJson(reg_PIB,{style:style}).addTo(mymap);
             //var geojson = L.geoJson(dep).addTo(mymap);
             
     </script>
