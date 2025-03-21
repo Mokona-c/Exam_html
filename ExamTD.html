@@ -172,7 +172,11 @@
                 <div class="sectionclass">
                     <!-- Colonne gauche (80%) -->
                     <div class="column-left">
-                        <h2>Carte de France :</h2> <br> <p>PIB par régions :</p>
+                        <h2>Carte de France :</h2> 
+                        <p>PIB par régions :</p>
+                        <input type="text" id="searchInput" placeholder="Entrez le nom d'une region">
+                        <button onclick="searchRegions()">Rechercher</button>
+                        <ul id="resultsList" ></ul>
                         <div id="mapid"></div>
                     </div>
 
@@ -191,17 +195,7 @@
                             <a href = "http://wwww.yourdomain.com/page5.html">dep5</a>
                             </div>
                         </div>
-                        <br>
-                        <div class="dropdown">
-                            <button class="mainmenubtn">Région1</button>
-                            <div class="dropdown-child">
-                            <a href = "http://wwww.yourdomain.com/page1.html">dep1</a>
-                            <a href = "http://wwww.yourdomain.com/page2.html">dep2</a>
-                            <a href = "http://wwww.yourdomain.com/page3.html">dep3</a>
-                            <a href = "http://wwww.yourdomain.com/page4.html">dep4</a>
-                            <a href = "http://wwww.yourdomain.com/page5.html">dep5</a>
-                            </div>
-                        </div>    
+                        <br>   
                     </div>
                 </div>
             </div>
@@ -210,10 +204,12 @@
         <div class="section">
             <h1>Section 3</h1>
             <p>Texte pour la troisième section.</p>
+            
         </div>
     </div>
     
     <script>
+            
         var mymap = L.map('mapid', {
             center: [47.00, 2.00],
             zoom: 5
@@ -233,31 +229,38 @@
                 
                 Sat:                 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'),
                             };
+        
         baselayers.OSM.addTo(mymap);    
         L.control.layers(baselayers, null, {position:'topright'}, {collapsed: false}).addTo(mymap); 
         
         /*Inséré une couche et mette un style :*/
         
         function getColor(d) {
-                return d > 2000 ? '#800026' :
-                       d > 1000 ? '#E31A1C' :
-                        d > 500 ? '#FD8D3C' :
-                        d > 100  ? '#FD8D3C' :
-                                    '#FFEDA0';
+                return d > 60000 ? '#800026' :
+                       d > 65000 ? '#BD0026' :
+                       d > 50000 ? '#E31A1C' :
+                       d > 55000 ? '#FC4E2A' :
+                       d > 40000 ? '#FD8D3C' :
+                       d > 45000 ? '#FEB24C' :
+                       d > 30000 ? '#FED976' :
+                       d > 30000 ? '#FFEDA0' :
+                                   '#FF5733' ;
                 }
             
-            function style(feature) {
-                return {
-                   fillColor:getColor(feature.properties.PIB_hab2021),
-                    weight: 0.5,
-                    opacity: 0.5,
-                    color: 'white',
-                    dashArray: '3',
-                    fillOpacity: 0.8,
-                    };
-                } 
+        function style1(feature) {
+            return {
+               fillColor:getColor(feature.properties.PIB_hab2021),
+               weight: 2,
+               opacity: 1,
+               color: 'white',
+               dashArray: '3',
+               fillOpacity: 0.7,
+               };
+            } 
+        
+            console.log(reg_PIB)
             
-            var geojson = L.geoJson(reg_PIB,{style:style}).addTo(mymap);
+            var geojson = L.geoJson(reg_PIB,{style:style1}).addTo(mymap);
             //var geojson = L.geoJson(dep).addTo(mymap);
             
     </script>
