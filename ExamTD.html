@@ -1,0 +1,259 @@
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Présentation du Site</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" >
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"> </script> 
+    
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
+    <script type='text/javascript' src='region_PIB.json' ></script>
+    <script type='text/javascript' src='departement.json' ></script>
+    <style>
+        
+        /*Création du format de la page*/
+        body {
+            background-color: #e0e0e0;
+            margin: 0;
+            font-family: Arial, sans-serif;}
+        
+        .papier { 
+            background: white;
+            width: 85%;
+            max-width: 1200px;
+            padding: 20px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            margin:20px auto;}
+        
+        /*Séparation en 3 parties */
+        .section {
+            padding: 10px;
+            border-bottom: 2px solid #ccc;
+            overflow: hidden;}
+
+        .section:last-child {
+            border-bottom: none;}
+
+        .middle-section {
+            display: flex;
+            gap: 20px; }
+        
+        .section:first-child {
+            background-image: url('https://www.amiens-ouest-tourisme.fr/wp-content/uploads/2020/07/rurale.jpg'); 
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            min-height: 200px;}
+        
+        
+        .sectionclass {
+            display: flex;
+            gap: 10px;
+            min-height: 500px;
+        }
+
+        /* collones */
+        .column-left {
+            flex-basis: 80%;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .column-right {
+            flex-basis: 20%;
+            background-color: #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            display:center;
+            align-items: center;
+            justify-content: ceenter;
+        }
+        
+        /*Format de textes */
+        h1{
+            font-size: 30px;
+            text-decoration: underline ;
+            text-align: center;
+            text-justify: auto}
+
+        h2{
+            font-size: 20px ;
+            text-decoration: underline ;}
+
+        h3{
+            text-decoration: underline ;}
+        
+        p{
+            text-justify: auto;}
+        
+        /*Création de la Carte*/
+        #mapid {
+            flex-grow : 1;
+            height: 100%;
+            min-height: 450px;
+            width: 100%;
+            border-radius : 5px;
+        }
+        
+        /*Création du menu déroulant*/
+        .mainmenubtn {
+            background-color: none;
+            color: black;
+            border: none;
+            cursor: pointer;
+            padding:10px;
+            margin-top: 10px;
+        }
+        
+        .mainmenubtn:hover {
+        background-color: none;
+        }
+        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-child {
+            display: none;
+            background-color: lightgray;
+            min-width: 50px;
+        }
+        
+        .dropdown-child a {
+            color: black;
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .dropdown:hover .dropdown-child {
+            display: block;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div class="papier">
+        <div class="section" >
+            <h1>Résumé économique sur la population française :</h1>
+        </div>        
+        
+        <div class="section" >
+            <p>Résumé sur la situation économique Francaise :</p>
+            
+            <p>L’économie de la France est l’une des plus puissantes au monde, avec un PIB qui la place parmi les principales nations industrialisées, cependant, au niveau régional, des disparités économiques existent.<br>
+
+            L’Île-de-France est la région la plus riche, générant près du tiers du PIB national, à l’inverse, certaines régions, comme l’Occitanie ou la Bourgogne-Franche-Comté, sont plus vulnérables aux crises économiques.
+
+            L’Auvergne-Rhône-Alpes se distingue par son industrie forte et la région Provence-Alpes-Côte d’Azur profite du tourisme et du commerce maritime grâce aux ports de Marseille et Nice. Le Grand Est et les Hauts-de-France, historiquement industriels, performe en logistique et nouvelles technologies.<br>
+
+            Les inégalités économiques entre régions sont atténuées par des politiques publiques et des aides européennes visant à favoriser l’aménagement du territoire et la compétitivité des zones moins développées. Ainsi, l’économie française évolue entre centralisation et rééquilibrage territorial pour favoriser un développement plus homogène.<br></p>
+            
+            <h1>Carte de mise en situation :</h1>
+
+            <div class="container">                
+                <div class="sectionclass">
+                    <!-- Colonne gauche (80%) -->
+                    <div class="column-left">
+                        <h2>Carte de France :</h2> <br> <p>PIB par régions :</p>
+                        <div id="mapid"></div>
+                    </div>
+
+                    <!-- Colonne droite (20%) -->
+                    <div class="column-right">
+                        <p>Carte de France : <br> Stat régionales.</p>
+                        
+                        <div class="dropdown">
+                        
+                            <button class="mainmenubtn">Région</button>
+                            <div class="dropdown-child">
+                            <a href = "http://wwww.yourdomain.com/page1.html">dep1</a>
+                            <a href = "http://wwww.yourdomain.com/page2.html">dep2</a>
+                            <a href = "http://wwww.yourdomain.com/page3.html">dep3</a>
+                            <a href = "http://wwww.yourdomain.com/page4.html">dep4</a>
+                            <a href = "http://wwww.yourdomain.com/page5.html">dep5</a>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="dropdown">
+                            <button class="mainmenubtn">Région1</button>
+                            <div class="dropdown-child">
+                            <a href = "http://wwww.yourdomain.com/page1.html">dep1</a>
+                            <a href = "http://wwww.yourdomain.com/page2.html">dep2</a>
+                            <a href = "http://wwww.yourdomain.com/page3.html">dep3</a>
+                            <a href = "http://wwww.yourdomain.com/page4.html">dep4</a>
+                            <a href = "http://wwww.yourdomain.com/page5.html">dep5</a>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h1>Section 3</h1>
+            <p>Texte pour la troisième section.</p>
+        </div>
+    </div>
+    
+    <script>
+        var mymap = L.map('mapid', {
+            center: [47.00, 2.00],
+            zoom: 5
+        });
+        
+        L.control.scale().addTo(mymap); 
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(mymap);
+    
+        var baselayers = {
+                OSM: 
+                L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { 
+                    attribution: '© <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' }).addTo(mymap),
+                Topo:                 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'),
+                
+                Sat:                 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'),
+                            };
+        baselayers.OSM.addTo(mymap);    
+        L.control.layers(baselayers, null, {position:'topright'}, {collapsed: false}).addTo(mymap); 
+        
+        /*Inséré une couche et mette un style :*/
+        
+//        function getColor(d) {
+//                return d > 
+//                }
+            
+            function style1(feature) {
+                return {
+                    weight: 0.5,
+                    opacity: 0.5,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: 0.8,
+                    fillColor:getColor(feature.properties.NOMREGION),
+                    };
+                } 
+            
+            var geojson = L.geoJson(reg_PIB).addTo(mymap);
+            //var geojson = L.geoJson(dep).addTo(mymap);
+            
+    </script>
+</body>
