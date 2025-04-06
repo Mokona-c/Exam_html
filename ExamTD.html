@@ -14,6 +14,8 @@
     
     <script type='text/javascript' src='region_PIB.json' ></script>
     <script type='text/javascript' src='departement.json' ></script>
+    <script type ='text/javascript' src= 'data_interactive.xlsx'></script>
+    
     <style>
         
         /*Création du format de la page*/
@@ -64,7 +66,7 @@
 
         /* collones */
         .column-left {
-            flex-basis: 80%;
+            flex-basis: 75%;
             background-color: #f9f9f9;
             padding: 10px;
             border-radius: 5px;
@@ -74,14 +76,14 @@
         }
         
         .column-right {
-            flex-basis: 20%;
+            flex-basis: 25%;
             background-color: #ddd;
             padding: 10px;
             border-radius: 5px;
             text-align: center;
             display:center;
             align-items: center;
-            justify-content: ceenter;
+            justify-content: center;
         }
         
         /*Format de textes */
@@ -99,7 +101,8 @@
             text-decoration: underline ;}
         
         p{
-            text-justify: auto;}
+            text-justify: auto;
+            text-align: justify;}
         
         /*Création de la Carte*/
         #mapid {
@@ -145,6 +148,40 @@
         .dropdown:hover .dropdown-child {
             display: block;
         }
+         .legend {
+        background: white;
+        padding: 6px 8px;
+        font: 14px Arial, sans-serif;
+        line-height: 24px;
+        color: #555;
+        box-shadow: 0 0 15px rgba(0,0,0,0,2);
+        border-radius : 5px;
+        }
+        
+          .legend i {
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin-right: 8px;
+        opacity: 0.7;
+        }
+        
+        /* Style pour les graphs */
+            .tooltip {
+                position: absolute;
+                text-align: center;
+                padding: 8px;
+                background-color: rgba(0, 0, 0, 0.7);
+                color: white;
+                border-radius: 4px;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.2s;
+            }
+            
+            #mongraphique1, #button1 {
+                display: none;
+            }
         
     </style>
 </head>
@@ -158,13 +195,13 @@
         <div class="section" >
             <p>Résumé sur la situation économique Francaise :</p>
             
-            <p>L’économie de la France est l’une des plus puissantes au monde, avec un PIB qui la place parmi les principales nations industrialisées, cependant, au niveau régional, des disparités économiques existent.<br>
+            <p>L’économie de la France est l’une des plus puissantes au monde, avec un PIB qui la place parmi les principales nations industrialisées, cependant, au niveau régional, des disparités économiques existent.<br><br>
 
-            L’Île-de-France est la région la plus riche, générant près du tiers du PIB national, à l’inverse, certaines régions, comme l’Occitanie ou la Bourgogne-Franche-Comté, sont plus vulnérables aux crises économiques.
+            L’Île-de-France est la région la plus riche, générant près du tiers du PIB national, mais des régions, comme l’Occitanie ou la Bourgogne-Franche-Comté sont à l'inverse plus vulnérable.
 
-            L’Auvergne-Rhône-Alpes se distingue par son industrie forte et la région Provence-Alpes-Côte d’Azur profite du tourisme et du commerce maritime grâce aux ports de Marseille et Nice. Le Grand Est et les Hauts-de-France, historiquement industriels, performe en logistique et nouvelles technologies.<br>
+            L’Auvergne-Rhône-Alpes se distingue par une industrie forte et la région Provence-Alpes-Côte d’Azur profite la mer avec du tourisme et du commerce maritime via les ports de Marseille et Nice. Le Grand Est et les Hauts-de-France sont historiquement industriels mais performe en logistique et en technologies.<br><br>
 
-            Les inégalités économiques entre régions sont atténuées par des politiques publiques et des aides européennes visant à favoriser l’aménagement du territoire et la compétitivité des zones moins développées. Ainsi, l’économie française évolue entre centralisation et rééquilibrage territorial pour favoriser un développement plus homogène.<br></p>
+            Les inégalités économiques entre régions sont régulé par des politiques publiques et des aides européennes qui vise à favoriser l’aménagement du territoire et la compétitivité dans des zones moins développées. L’économie française évolue entre centralisation et rééquilibrage territorial pour favoriser un développement plus homogène.<br><br></p>
             
             <h1>Carte de mise en situation :</h1>
 
@@ -174,16 +211,13 @@
                     <div class="column-left">
                         <h2>Carte de France :</h2> 
                         <p>PIB par régions :</p>
-                        <input type="text" id="searchInput" placeholder="Entrez le nom d'une region">
-                        <button onclick="searchRegions()">Rechercher</button>
-                        <ul id="resultsList" ></ul>
                         <div id="mapid"></div>
                     </div>
 
                     <!-- Colonne droite (20%) -->
                     <div class="column-right">
                         <p>Carte de France : <br> Stat régionales.</p>
-                        
+                        <!--
                         <div class="dropdown">
                         
                             <button class="mainmenubtn">Région</button>
@@ -194,7 +228,7 @@
                             <a href = "http://wwww.yourdomain.com/page4.html">dep4</a>
                             <a href = "http://wwww.yourdomain.com/page5.html">dep5</a>
                             </div>
-                        </div>
+                        </div> -->
                         <br>   
                     </div>
                 </div>
@@ -204,11 +238,13 @@
         <div class="section">
             <h1>Section 3</h1>
             <p>Texte pour la troisième section.</p>
+            <div id="graph"></div> 
             
         </div>
     </div>
     
     <script>
+        
             
         var mymap = L.map('mapid', {
             center: [47.00, 2.00],
@@ -236,13 +272,13 @@
         /*Inséré une couche et mette un style :*/
         
         function getColor(d) {
-                return d > 60000 ? '#800026' :
-                       d > 65000 ? '#BD0026' :
-                       d > 50000 ? '#E31A1C' :
-                       d > 55000 ? '#FC4E2A' :
-                       d > 40000 ? '#FD8D3C' :
-                       d > 45000 ? '#FEB24C' :
-                       d > 30000 ? '#FED976' :
+                return d > 65000 ? '#800026' :
+                       d > 60000 ? '#BD0026' :
+                       d > 55000 ? '#E31A1C' :
+                       d > 50000 ? '#FC4E2A' :
+                       d > 45000 ? '#FD8D3C' :
+                       d > 40000 ? '#FEB24C' :
+                       d > 35000 ? '#FED976' :
                        d > 30000 ? '#FFEDA0' :
                                    '#FF5733' ;
                 }
@@ -252,16 +288,138 @@
                fillColor:getColor(feature.properties.PIB_hab2021),
                weight: 2,
                opacity: 1,
-               color: 'white',
+               color: 'black',
                dashArray: '3',
                fillOpacity: 0.7,
                };
             } 
         
-            console.log(reg_PIB)
+        console.log(reg_PIB)
             
-            var geojson = L.geoJson(reg_PIB,{style:style1}).addTo(mymap);
-            //var geojson = L.geoJson(dep).addTo(mymap);
+        var geojson = L.geoJson(reg_PIB,{style:style1}).addTo(mymap);
+        //var geojson = L.geoJson(dep).addTo(mymap);
+        
+         
+        var legend = L.control({position: 'bottomright'});
+
+        legend.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'info legend'),
+                grades = [30000, 35000, 40000, 45000, 50000, 55000, 60000, 65000],
+                labels = []
+       
+         for (var i = 0; i < grades.length; i++) {
+            div.innerHTML +=
+            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    }
+
+
+                return div;
+        };
+
+        legend.addTo(mymap);
+        
+        
+        function onEachFeature(feature, layer) {
+            layer.on({
+                click: function(e) {
+                    var props = feature.properties;
+                    var content = "<strong>" + props.NOM + "</strong><br>" +
+                          "PIB par habitant en 2021 : " + props.PIB_hab2021.toLocaleString() + " €";
+                    layer.bindPopup(content).openPopup();
+                    }
+                });
+            }
+        
+        var geojson = L.geoJson(reg_PIB, {
+            style: style1,
+            onEachFeature: onEachFeature
+            }).addTo(mymap);
+        
+         
+        
+        //Création du graphique 
+        
+        // taille graph
+        const margin = { top: 20, right: 30, bottom: 40, left: 40 },
+                width = 500 - margin.left - margin.right,
+                height = 300 - margin.top - margin.bottom;
+            
+        // Génération d'un élément de type graphique svg, positionnement, et définition de la taille
+        const svg = d3.select("#mongraphique1").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // Chargement des données CSV
+        d3.csv('donnee_INSEE_tri.xlsx').then(function(data) {
+        // Convertir les données en nombres pour "part1" et part2"
+            data.forEach(d => {
+                d.part1 = +d.part1;
+                d.part2 = +d.part2;
+            });
+                
+        // Définition des échelles
+        const x = d3.scaleBand()
+            .domain(data.map(d => d.category))
+            .range([0, width])
+            .padding(0.1);
+            
+        const y = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.part1 + d.part2)])
+            .nice()
+            .range([height, 0]);
+            
+        const color = d3.scaleOrdinal()
+            .domain(["part1", "part2"])
+            .range(["#1f77b4", "#ff7f0e"]);
+                
+        // Empilement des données
+        const stack = d3.stack()
+            .keys(["part1", "part2"]);
+                
+        const stackedData = stack(data);
+        
+        // Ajout des barres avec tooltip
+        svg.selectAll(".layer")
+            .data(stackedData)
+            .enter().append("g")
+            .attr("class", "layer")
+            .attr("fill", d => color(d.key))
+            .selectAll("rect")
+            .data(d => d)
+            .enter().append("rect")
+            .attr("x", d => x(d.data.category))
+            .attr("y", d => y(d[1]))
+            .attr("height", d => y(d[0]) - y(d[1]))
+            .attr("width", x.bandwidth())
+        // Ajouter un événement de survol pour afficher le tooltip
+            .on("mouseover", function(event, d) {
+            tooltip.transition().duration(50).style("opacity", .9); // Rendre le tooltip visible
+            tooltip.html(`${d.data.category}<br>Bleu : ${d.data.part1}<br>Orange : ${d.data.part2}`)
+            .style("left", (event.pageX + 5) + "px") // Positionner à côté du curseur
+            .style("top", (event.pageY - 28) + "px");
+                })
+        // Ajouter un événement de sortie pour masquer le tooltip
+            .on("mouseout", function() {
+            tooltip.transition().duration(50).style("opacity", 0); // Masquer le tooltip
+                    });
+                
+        // Ajout des axes x et y
+        svg.append("g")
+            .attr("class", "axis x-axis")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x));
+            
+        svg.append("g")
+            .attr("class", "axis y-axis")
+            .call(d3.axisLeft(y));
+                
+        }).catch(function(error) {
+            console.error('Erreur lors du chargement du fichier CSV : ', error);
+            });
+            */
             
     </script>
 </body>
